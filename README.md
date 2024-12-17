@@ -25,17 +25,75 @@ Next.js now displays a Static Route Indicator during development to help you ide
  /blog/[slug] - dynamic
 ```
 
-## Learn More
+### Async Request APIs (Breaking Change)
 
-To learn more about Next.js, take a look at the following resources:
+This is a breaking change and affects the following APIs:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- cookies
+- headers
+- draftMode
+- params in layout.js, page.js, route.js, default.js, generateMetadata, and generateViewport
+- searchParams in page.js
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```tsx
+import { Post } from "@/types";
 
-## Deploy on Vercel
+async function page({ params }: { params: Promise<{ id: string }> }) {
+  // await headers();
+  // await cookies();
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  const id = (await params).id;
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${id}`
+  );
+  const post: Post = await response.json();
+
+  console.log(id, "logs params");
+
+  return (
+    <div>
+      <h1>Dynmic Post</h1>
+      <p>{post.title}</p>
+      <p>{post.body}</p>
+    </div>
+  );
+}
+
+export default page;
+```
+
+### Client Router Cache no longer caches Page components by default
+
+```jsx
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+  experimental: {
+    staleTimes: {
+      dynamic: 30, // 30 seconds - Cache
+      static: 180, // 30 minutes - Cache
+    },
+  },
+};
+
+export default nextConfig;
+```
+
+### <Form> Component
+
+```tsx
+import Form from "next/form";
+
+export default function Page() {
+  return (
+    <Form action="/search">
+      <input name="query" />
+      <button type="submit">Submit</button>
+    </Form>
+  );
+}
+```
+
+> If you found the app's code and documentation helpful, please give the repo a like. This encourages us to bring more updates like this in the future.
