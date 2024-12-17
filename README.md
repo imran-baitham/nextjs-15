@@ -1,24 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next Js 15 - short doc
 
-## Getting Started
+### Turbopack Dev
 
-First, run the development server:
+stable and ready to speed up your local development
+
+When we visit a page, only that specific page is compiled, not the entire application or other pages.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+next dev --turbo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Hydration error improvements
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Earlier, when a hydration error occurred in Next.js, it was hard to identify where the error was happening because the code source was not shown. Now, improvements have been made to display the exact source of the error.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Hydration errors now display the source code of the error with suggestions on how to address the issue.
+
+### Static Route Indicator
+
+Next.js now displays a Static Route Indicator during development to help you identify which routes are static or dynamic.
+
+```jsx
+ /blog - static
+ /blog/[slug] - dynamic
+```
 
 ## Learn More
 
